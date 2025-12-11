@@ -4,7 +4,8 @@
         "output_file": "daily_job_report.html",
         "max_experience_years": 2,
         "fresh_grad_boost_score": 10,
-        "keyword_match_score": 5
+        "keyword_match_score": 5,
+        "top_results_limit": 10
     },
     "job_queries": [
         "https://www.linkedin.com/jobs/search?keywords=Data%20Scientist&location=Singapore&geoId=102454443&f_TPR=r86400",
