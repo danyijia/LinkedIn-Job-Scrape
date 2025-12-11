@@ -1,0 +1,62 @@
+{
+    "settings": {
+        "resume_path": "Dan Yi Jia_Resume.pdf",
+        "output_file": "daily_job_report.html",
+        "max_experience_years": 2,
+        "fresh_grad_boost_score": 10,
+        "keyword_match_score": 5
+    },
+    "job_queries": [
+        "https://www.linkedin.com/jobs/search?keywords=Data%20Scientist&location=Singapore&geoId=102454443&f_TPR=r86400",
+        "https://www.linkedin.com/jobs/search?keywords=Data%20Engineer&location=Singapore&geoId=102454443&f_TPR=r86400",
+        "https://www.linkedin.com/jobs/search?keywords=data%20analyst&location=Singapore&geoId=102454443&f_TPR=r86400"
+    ],
+    "keywords": [
+        "Python",
+        "SQL",
+        "R",
+        "HTML",
+        "Power BI",
+        "Tableau",
+        "Looker Studio",
+        "Pandas",
+        "Numpy",
+        "Seaborn",
+        "Scikit-learn",
+        "Streamlit",
+        "AWS",
+        "Alteryx",
+        "Figma",
+        "Airflow",
+        "Data Science",
+        "Data Analyst",
+        "BigQuery",
+        "Apache Hadoop",
+        "Spark",
+        "Cloud Computing"
+    ],
+    "fresh_grad_keywords": [
+        "fresh grad",
+        "fresh graduate",
+        "recent graduate",
+        "entry level",
+        "junior",
+        "0 years",
+        "no experience"
+    ],
+    "seniority_keywords": [
+        "senior",
+        "snr",
+        "lead",
+        "principal",
+        "head of",
+        "director",
+        "vp",
+        "chief",
+        "manager"
+    ],
+    "apify": {
+        "max_items": 100,
+        "scrape_company": true
+    }
+}
