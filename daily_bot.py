@@ -72,17 +72,20 @@ def send_email(results):
         print("No matches found to email.")
         return
 
-    print(f"Sending email with {len(results)} jobs...")
+    # Determine how many jobs to send (default 10)
+    limit = CONFIG.get("settings", {}).get("top_results_limit", 10)
+
+    print(f"Sending email with top {min(len(results), limit)} jobs...")
     
     msg = MIMEMultipart()
     msg['From'] = EMAIL_USER
     msg['To'] = EMAIL_USER
-    msg['Subject'] = "Your Daily Top 10 Job Matches"
+    msg['Subject'] = f"Your Daily Top {limit} Job Matches"
 
     # Build HTML body
     html_content = "<h2>🔥 Top matches for you today</h2><ul>"
     
-    for job in results[:10]:
+    for job in results[:limit]:
         score = job.get("match_score", 0)
         color = "green" if score > 10 else "orange"
         html_content += f"""
