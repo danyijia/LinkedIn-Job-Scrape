@@ -40,9 +40,12 @@ This project uses **Apify** to scrape data from LinkedIn.
 All settings are managed in `config.json`.
 
 - **`settings`**:
-    - `max_experience_years`: Filter out jobs requiring more than this.
+    - `max_experience_years`: Filter out jobs requiring more than this (e.g., set to 3 to keep 1-2 year roles).
+    - `top_results_limit`: How many jobs to email you (e.g., 10, 20).
     - `fresh_grad_boost_score`: Bonus points for "fresh grad" / "junior" roles.
     - `resume_path`: Path to your PDF resume.
+- **`apify`**:
+    - `max_items`: How many jobs to fetch from LinkedIn (e.g. 100).
 - **`job_queries`**: Add or remove LinkedIn search URLs.
 - **`keywords`**: Add skills you want to match (e.g., "React", "AWS").
 
