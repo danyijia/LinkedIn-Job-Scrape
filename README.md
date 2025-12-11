@@ -63,4 +63,22 @@ To run this automatically (e.g., every day at 9 AM) on macOS/Linux:
    ```bash
    0 9 * * * cd "/path/to/project" && /usr/bin/python3 daily_bot.py >> cron_log.txt 2>&1
    ```
-3. Save and exit.
+   **Breakdown of `0 9 * * *`:**
+   - `0`: Minute (0-59)
+   - `9`: Hour (0-23, 24-hour command)
+   - `*`: Day of Month
+   - `*`: Month
+   - `*`: Day of Week
+
+   *Example: To run at 5:30 PM, use `30 17 * * *`.*
+
+3. **Save and Exit**:
+   - **If you are in Vim** (default on Mac):
+     - Press `Esc` key.
+     - Type `:wq` (write and quit).
+     - Press `Enter`.
+   - **If you are in Nano**:
+     - Press `Ctrl + X`.
+     - Press `Y` to confirm.
+     - Press `Enter` to save.
+
