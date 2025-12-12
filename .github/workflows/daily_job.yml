@@ -1,0 +1,31 @@
+name: Daily Job Scraper
+
+on:
+  schedule:
+    # Runs at 09:00 UTC everyday (adjust as needed, e.g. Singapore is UTC+8, so 01:00 UTC = 09:00 SGT)
+    - cron: '0 1 * * *'
+  workflow_dispatch:  # Allows manual run from GitHub UI
+
+jobs:
+  scrape-and-email:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Bot
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: python daily_bot.py

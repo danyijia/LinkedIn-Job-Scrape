@@ -55,33 +55,20 @@ Run the script manually:
 python3 daily_bot.py
 ```
 
-## Automation (Daily Schedule)
-To run this automatically (e.g., every day at 9 AM) on macOS/Linux:
+## Cloud Automation (Best for "Always On")
+To run this without keeping your laptop on, use **GitHub Actions**.
 
-1. Open your cron schedule:
-   ```bash
-   crontab -e
-   ```
-2. Add the following line (replace `/path/to/project` with your actual full path):
+1.  **Push the code** to a GitHub repository.
+2.  **Add Secrets**: Go to your Repo **Settings** > **Secrets and variables** > **Actions**.
+    - Add `APIFY_TOKEN`
+    - Add `EMAIL_USER`
+    - Add `EMAIL_PASSWORD`
+3.  **Done!** The bot is pre-configured (in `.github/workflows/daily_job.yml`) to run every day at **09:00 AM Singapore Time** (01:00 UTC).
+
+## Local Automation (Cron)
+If you prefer to run it on your own computer:
+1. Run `crontab -e`.
+2. Add:
    ```bash
    0 9 * * * cd "/path/to/project" && /usr/bin/python3 daily_bot.py >> cron_log.txt 2>&1
    ```
-   **Breakdown of `0 9 * * *`:**
-   - `0`: Minute (0-59)
-   - `9`: Hour (0-23, 24-hour command)
-   - `*`: Day of Month
-   - `*`: Month
-   - `*`: Day of Week
-
-   *Example: To run at 5:30 PM, use `30 17 * * *`.*
-
-3. **Save and Exit**:
-   - **If you are in Vim** (default on Mac):
-     - Press `Esc` key.
-     - Type `:wq` (write and quit).
-     - Press `Enter`.
-   - **If you are in Nano**:
-     - Press `Ctrl + X`.
-     - Press `Y` to confirm.
-     - Press `Enter` to save.
-
