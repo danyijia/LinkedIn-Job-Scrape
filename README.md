@@ -60,6 +60,7 @@ To run this without keeping your laptop on, use **GitHub Actions**.
 
 1.  **Push the code** to a GitHub repository.
 2.  **Add Secrets**: Go to your Repo **Settings** > **Secrets and variables** > **Actions**.
+    - Click **New repository secret** (do NOT use "Variables" or "Environment secrets").
     - Add `APIFY_TOKEN`
     - Add `EMAIL_USER`
     - Add `EMAIL_PASSWORD`
