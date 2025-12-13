@@ -47,6 +47,9 @@ All settings are managed in `config.json`.
 - **`apify`**:
     - `max_items`: How many jobs to fetch from LinkedIn (e.g. 100).
 - **`job_queries`**: Add or remove LinkedIn search URLs.
+    - **Tip**: In the URL, `f_TPR=r86400` means "Past 24 Hours".
+    - `f_TPR=r604800` means "Past Week".
+    - `f_TPR=r2592000` means "Past Month".
 - **`keywords`**: Add skills you want to match (e.g., "React", "AWS").
 
 ## Usage
