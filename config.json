@@ -7,6 +7,10 @@
         "keyword_match_score": 5,
         "top_results_limit": 10
     },
+    "exclude_keywords": [
+        "PhD",
+        "Ph.D"
+    ],
     "job_queries": [
         "https://www.linkedin.com/jobs/search?keywords=Data%20Scientist&location=Singapore&geoId=102454443&f_TPR=r86400",
         "https://www.linkedin.com/jobs/search?keywords=Data%20Engineer&location=Singapore&geoId=102454443&f_TPR=r86400",
@@ -43,7 +47,12 @@
         "entry level",
         "junior",
         "0 years",
-        "no experience"
+        "no experience",
+        "management associate",
+        "MAP",
+        "management trainee",
+        "graduate programme",
+        "graduate program"
     ],
     "seniority_keywords": [
         "senior",

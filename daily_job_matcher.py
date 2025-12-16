@@ -17,8 +17,13 @@ def score_job(resume_text, job):
     boost_score = settings.get("fresh_grad_boost_score", 10)
     keyword_score = settings.get("keyword_match_score", 5)
     
-    # 1. Seniority Filter
+    # 1. Negative Filter (Exclude Keywords)
     title_lower = job['title'].lower()
+    exclude_keywords = CONFIG.get("exclude_keywords", [])
+    if any(kw.lower() in title_lower for kw in exclude_keywords):
+        return 0
+
+    # 2. Seniority Filter
     seniority_keywords = CONFIG.get("seniority_keywords", [])
     
     if any(kw in title_lower for kw in seniority_keywords):
