@@ -21,13 +21,13 @@ def score_job(resume_text, job):
     title_lower = job['title'].lower()
     exclude_keywords = CONFIG.get("exclude_keywords", [])
     if any(kw.lower() in title_lower for kw in exclude_keywords):
-        return 0
+        return -1
 
     # 2. Seniority Filter
     seniority_keywords = CONFIG.get("seniority_keywords", [])
     
     if any(kw in title_lower for kw in seniority_keywords):
-        return 0
+        return -1
 
     # 2. Experience Filter
     desc_lower = job['description'].lower()
@@ -59,7 +59,7 @@ def score_job(resume_text, job):
         num1 = int(match.group(1))
         # Logic: If start experience >= max_exp (default 2), filter it out.
         if num1 >= max_exp:
-            return 0
+            return -1
             
     job_text = preprocess(
         f"{job['title']} {job['company']} {job['description']} {job['location']}"
@@ -92,6 +92,8 @@ def match_jobs(resume_text, jobs):
     results = []
     for job in jobs:
         s = score_job(resume_text, job)
+        if s < 0:
+            continue
         results.append({
             "title": job["title"],
             "company": job["company"],
