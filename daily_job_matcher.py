@@ -19,8 +19,11 @@ def score_job(resume_text, job):
     
     # 1. Negative Filter (Exclude Keywords)
     title_lower = job['title'].lower()
+    desc_lower = job['description'].lower()
     exclude_keywords = CONFIG.get("exclude_keywords", [])
-    if any(kw.lower() in title_lower for kw in exclude_keywords):
+    
+    # Check both title and description for exclude keywords
+    if any(kw.lower() in title_lower or kw.lower() in desc_lower for kw in exclude_keywords):
         return -1
 
     # 2. Seniority Filter
@@ -30,7 +33,8 @@ def score_job(resume_text, job):
         return -1
 
     # 2. Experience Filter
-    desc_lower = job['description'].lower()
+    # desc_lower stored above
+    
     
     # Regex explanation:
     # \b(\d+)            -> Match start number (Group 1)

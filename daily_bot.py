@@ -6,6 +6,7 @@ import fitz  # PyMuPDF
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
+from bs4 import BeautifulSoup
 
 from daily_job_matcher import match_jobs
 
@@ -18,6 +19,22 @@ EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "").replace(" ", "")
 # Load config rules
 with open("config.json") as f:
     CONFIG = json.load(f)
+
+# File to store history of sent jobs
+HISTORY_FILE = "job_history.json"
+
+def load_history():
+    if os.path.exists(HISTORY_FILE):
+        try:
+            with open(HISTORY_FILE, "r") as f:
+                return set(json.load(f))
+        except:
+            return set()
+    return set()
+
+def save_history(history_set):
+    with open(HISTORY_FILE, "w") as f:
+        json.dump(list(history_set), f)
 
 def extract_pdf_text(path):
     try:
@@ -56,11 +73,21 @@ def fetch_jobs_from_apify():
 def normalize_job_data(apify_items):
     jobs = []
     for item in apify_items:
+        # Get raw description (often HTML)
+        raw_desc = item.get("description", "") or item.get("descriptionText", "")
+        
+        # Strip HTML to plain text
+        if raw_desc:
+            soup = BeautifulSoup(raw_desc, "html.parser")
+            clean_desc = soup.get_text(separator=" ")
+        else:
+            clean_desc = ""
+
         # Map Apify fields to our matcher expectations
         jobs.append({
             "title": item.get("title", ""),
             "company": item.get("companyName", ""),
-            "description": item.get("description", "") or item.get("descriptionText", ""),
+            "description": clean_desc,
             "location": item.get("location", ""),
             # Apify often uses 'link' or 'applyUrl'
             "url": item.get("jobUrl") or item.get("url") or item.get("link") or item.get("applyUrl") or "#"
@@ -140,13 +167,35 @@ def main():
     clean_jobs = normalize_job_data(raw_jobs)
 
     # 4. Match
-    matches = match_jobs(resume_text, clean_jobs)
+    # Filter out jobs already in history
+    history = load_history()
+    new_jobs = [j for j in clean_jobs if j['url'] not in history]
+    print(f"Filtered out {len(clean_jobs) - len(new_jobs)} previously seen jobs.")
+    
+    matches = match_jobs(resume_text, new_jobs)
     print(f"Ranked {len(matches)} jobs.")
 
     # 5. Email
     # Only send if we have matches and a password set
-    if EMAIL_PASSWORD and "App Password" not in EMAIL_PASSWORD:
+    if EMAIL_PASSWORD:
+        if "App Password" not in EMAIL_PASSWORD:
+             print("Warning: Email password might not be an App Password.")
+        
+        # Send email
         send_email(matches)
+        
+        # Update history with the jobs we just sent/processed
+        # We track all matches that were qualified enough to be returned
+        # Or should we only track the top N sent?
+        # Let's track all valid matches so we don't re-process them tomorrow
+        limit = settings.get("top_results_limit", 10)
+        sent_jobs = matches[:limit]
+        
+        for job in sent_jobs:
+            history.add(job['url'])
+        
+        save_history(history)
+        print(f"Updated history with {len(sent_jobs)} new jobs.")
     else:
         print("Skipping email send. Please set EMAIL_PASSWORD in .env to send real emails.")
 
