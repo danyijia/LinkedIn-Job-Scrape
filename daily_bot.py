@@ -83,14 +83,18 @@ def normalize_job_data(apify_items):
         else:
             clean_desc = ""
 
+        # Clean URL to ensure better deduplication (remove query params)
+        raw_url = item.get("jobUrl") or item.get("url") or item.get("link") or item.get("applyUrl") or "#"
+        clean_url = raw_url.split("?")[0] if raw_url else "#"
+
         # Map Apify fields to our matcher expectations
         jobs.append({
             "title": item.get("title", ""),
             "company": item.get("companyName", ""),
             "description": clean_desc,
             "location": item.get("location", ""),
-            # Apify often uses 'link' or 'applyUrl'
-            "url": item.get("jobUrl") or item.get("url") or item.get("link") or item.get("applyUrl") or "#"
+            "postedAt": item.get("postedAt", "Unknown"), 
+            "url": clean_url
         })
     return jobs
 
