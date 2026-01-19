@@ -50,7 +50,7 @@ def score_job(resume_text, job):
     # )?                 -> optional
     # \s*                -> optional space
     # years?             -> match year or years
-    experience_pattern = r'\b(\d+)\s*(?:(?:-|to)\s*(\d+))?\s*(?:(\+|plus))?\s*years?'
+    experience_pattern = r'\b(\d+)\s*(?:(?:-|to)\s*(\d+))?\s*(?:(\+|plus|or\s+more))?\s*(?:(?:\w+)\s+){0,2}(?:years?|yoe)'
     
     matches = re.finditer(experience_pattern, desc_lower)
     for match in matches:

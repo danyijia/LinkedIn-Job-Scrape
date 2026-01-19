@@ -15,5 +15,6 @@ venv/
 # Project Specific
 cron_log.txt
 daily_job_report.html
+job_history.json
 scheduling.md
 walkthrough.md
