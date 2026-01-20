@@ -52,17 +52,29 @@ def score_job(resume_text, job):
     # years?             -> match year or years
     experience_pattern = r'\b(\d+)\s*(?:(?:-|to)\s*(\d+))?\s*(?:(\+|plus|or\s+more))?\s*(?:(?:\w+)\s+){0,2}(?:years?|yoe)'
     
+    # Check for fresh grad friendliness to potentially override experience filter
+    fresh_grad_keywords = CONFIG.get("fresh_grad_keywords", [])
+    is_fresh_grad = any(kw in desc_lower or kw in title_lower for kw in fresh_grad_keywords)
+
     matches = re.finditer(experience_pattern, desc_lower)
     for match in matches:
         # Check context: if preceded by "within" (e.g. "within 2 years"), ignore match.
         start_idx = match.start()
-        preceding_text = desc_lower[max(0, start_idx-10):start_idx]
-        if "within" in preceding_text:
+        # Look at slightly more characters but enforce word boundary or space
+        preceding_text = desc_lower[max(0, start_idx-15):start_idx].strip()
+        
+        # If "within" is the *last* word before the number, ignore this match
+        if preceding_text.endswith("within"):
             continue
 
         num1 = int(match.group(1))
         # Logic: If start experience >= max_exp (default 2), filter it out.
+        # BUT: If it's a fresh grad job, we might want to be lenient or skip this check.
+        # User request: "if the description mentions 'fresh graduate' do flag the job as appropriate"
         if num1 >= max_exp:
+            if is_fresh_grad:
+                # Log or just continue? We'll treat it as safe to keep.
+                continue 
             return -1
             
     job_text = preprocess(
