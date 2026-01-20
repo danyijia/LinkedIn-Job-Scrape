@@ -50,7 +50,17 @@ def score_job(resume_text, job):
     # )?                 -> optional
     # \s*                -> optional space
     # years?             -> match year or years
-    experience_pattern = r'\b(\d+)\s*(?:(?:-|to)\s*(\d+))?\s*(?:(\+|plus|or\s+more))?\s*(?:(?:\w+)\s+){0,2}(?:years?|yoe)'
+    # Map for word-based numbers
+    number_map = {
+        "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+        "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10
+    }
+    
+    # Regex extended to capture word numbers
+    # Group 1 is now (word|digit), matching start number
+    # Group 2 is end number (if range)
+    # Group 3 is modifier (+, plus, etc)
+    experience_pattern = r'\b(one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s*(?:(?:-|to)\s*(\d+))?\s*(?:(\+|plus|or\s+more))?\s*(?:(?:\w+)\s+){0,2}(?:years?|yoe|yrs?|y\.o\.e)'
     
     # Check for fresh grad friendliness to potentially override experience filter
     fresh_grad_keywords = CONFIG.get("fresh_grad_keywords", [])
@@ -67,7 +77,12 @@ def score_job(resume_text, job):
         if preceding_text.endswith("within"):
             continue
 
-        num1 = int(match.group(1))
+        num_str = match.group(1)
+        # Parse number (handle words or digits)
+        if num_str in number_map:
+            num1 = number_map[num_str]
+        else:
+            num1 = int(num_str)
         # Logic: If start experience >= max_exp (default 2), filter it out.
         # BUT: If it's a fresh grad job, we might want to be lenient or skip this check.
         # User request: "if the description mentions 'fresh graduate' do flag the job as appropriate"
