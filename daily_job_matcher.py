@@ -6,7 +6,7 @@ with open("config.json") as f:
     CONFIG = json.load(f)
 
 def preprocess(text):
-    return re.sub(r"[^a-zA-Z0-9 ]", " ", text).lower()
+    return re.sub(r"[^a-zA-Z0-9 \-\+\.]", " ", text).lower()
 
 def score_job(resume_text, job):
     resume = preprocess(resume_text)
